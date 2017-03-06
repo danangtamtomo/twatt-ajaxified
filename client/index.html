@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Twatts</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body>
+  <form method="POST">
+    <textarea id="status" rows="8" cols="80"></textarea>
+    <button type="button" onclick="postTweet()">Post</button>
+  </form>
+  <button type="button" onclick="getTimeline()">Refresh</button>
+  <div class="recent-tweets">
+    <ul id="tweets">
+
+    </ul>
+  </div>
+  <script type="text/javascript">
+    function postTweet() {
+      $.ajax({
+        url: "http://localhost:3000/twitters/timeline",
+        type: 'POST',
+        data: {
+          status: $('#status').val()
+        },
+        success: function (timeline) {
+          console.log(timeline);
+          $('#tweets').prepend(`<li>${timeline.text}</li>`)
+        },
+        fail: function (err) {
+          alert('Error')
+        }
+      })
+    }
+
+    function getTimeline() {
+      $.ajax({
+        url: "http://localhost:3000/twitters/timeline",
+        type: 'GET',
+        success: function (timeline) {
+          $('#tweets').html(``)
+          timeline.forEach(function (tweet) {
+            $('#tweets').append(`<li>${tweet.text}</li>`)
+          })
+        },
+        fail: function (err) {
+          alert('Error')
+        }
+      })
+    }
+  </script>
+</body>
+</html>
